@@ -1,0 +1,330 @@
+{
+  "people": [
+    {
+      "id": "proprietor_1",
+      "name": "D. Jayanthi",
+      "role": "proprietor",
+      "pin": "1111",
+      "photoUrl": "https://lh3.googleusercontent.com/d/1pGUnA5asuY_z_Z-KwS7y1JlXAWr1-vjf",
+      "designation": "Proprietor & Founder",
+      "phone": "+91 94401 23456",
+      "email": "proprietor@jayanthiassoc.com",
+      "joinedDate": "2020-04-01"
+    },
+    {
+      "id": "manager_1",
+      "name": "K. Rakesh Pillai",
+      "role": "manager",
+      "pin": "2221",
+      "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&q=80",
+      "designation": "General Manager (Admin 1)",
+      "phone": "+91 94402 34567",
+      "email": "rakesh.p@jayanthiassoc.com",
+      "joinedDate": "2021-06-15"
+    },
+    {
+      "id": "tl_1",
+      "name": "Saritha Reddy",
+      "role": "team_leader",
+      "pin": "3331",
+      "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&q=80",
+      "designation": "Team Leader (Group A)",
+      "phone": "+91 94403 45678",
+      "email": "saritha.r@jayanthiassoc.com",
+      "joinedDate": "2022-09-01"
+    },
+    {
+      "id": "emp_1",
+      "name": "G. Srinivas",
+      "role": "employee",
+      "pin": "4001",
+      "photoUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&q=80",
+      "designation": "Software Associate",
+      "phone": "+91 98480 12345",
+      "email": "srinivas@jayanthiassoc.com",
+      "joinedDate": "2023-11-10"
+    },
+    {
+      "id": "emp_2",
+      "name": "Ch. Venkatesh",
+      "role": "employee",
+      "pin": "4002",
+      "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&q=80",
+      "designation": "Financial Associate",
+      "phone": "+91 98480 54321",
+      "email": "venkatesh@jayanthiassoc.com",
+      "joinedDate": "2024-01-05"
+    },
+    {
+      "id": "emp_3",
+      "name": "K. Sai Kumar",
+      "role": "employee",
+      "pin": "4003",
+      "photoUrl": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&q=80",
+      "designation": "HR Coordinator",
+      "phone": "+91 98480 98765",
+      "email": "saikumar@jayanthiassoc.com",
+      "joinedDate": "2024-04-12"
+    },
+    {
+      "id": "emp_4",
+      "name": "G. Laxmi Prasad",
+      "role": "employee",
+      "pin": "4004",
+      "photoUrl": "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=150&h=150&fit=crop&q=80",
+      "designation": "Operations Executive",
+      "phone": "+91 98481 12233",
+      "email": "laxmi@jayanthiassoc.com",
+      "joinedDate": "2024-08-20"
+    },
+    {
+      "id": "emp_5",
+      "name": "B. Rajendra Prasad",
+      "role": "employee",
+      "pin": "4005",
+      "photoUrl": "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=150&h=150&fit=crop&q=80",
+      "designation": "Database Analyst",
+      "phone": "+91 98481 44556",
+      "email": "rajendra@jayanthiassoc.com",
+      "joinedDate": "2024-11-01"
+    }
+  ],
+  "funding": [
+    {
+      "id": "2026-06",
+      "monthName": "June 2026",
+      "employeeFundings": {
+        "emp_1": {
+          "employeeId": "emp_1",
+          "transactions": [
+            {
+              "id": "txn_1_1",
+              "date": "2026-06-02",
+              "totalFunding": 45000,
+              "balanceEmployeeFunding": 5000,
+              "receivedAmount": 40000,
+              "balanceAmount": 5000,
+              "notes": "Project Alpha Srinivas Initialization",
+              "proprietorApproved": true
+            }
+          ]
+        },
+        "emp_2": {
+          "employeeId": "emp_2",
+          "transactions": [
+            {
+              "id": "txn_2_1",
+              "date": "2026-06-04",
+              "totalFunding": 60000,
+              "balanceEmployeeFunding": 10000,
+              "receivedAmount": 50000,
+              "balanceAmount": 10000,
+              "notes": "Venkatesh Campaign resources",
+              "proprietorApproved": true
+            }
+          ]
+        },
+        "emp_3": {
+          "employeeId": "emp_3",
+          "transactions": [
+            {
+              "id": "txn_3_1",
+              "date": "2026-06-05",
+              "totalFunding": 30000,
+              "balanceEmployeeFunding": 5000,
+              "receivedAmount": 25000,
+              "balanceAmount": 5000,
+              "notes": "Sai Kumar recruitment events fund",
+              "proprietorApproved": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "2026-05",
+      "monthName": "May 2026",
+      "employeeFundings": {
+        "emp_1": {
+          "employeeId": "emp_1",
+          "transactions": [
+            {
+              "id": "txn_1_may",
+              "date": "2026-05-12",
+              "totalFunding": 50000,
+              "balanceEmployeeFunding": 0,
+              "receivedAmount": 50000,
+              "balanceAmount": 0,
+              "notes": "May server operational funding",
+              "proprietorApproved": true
+            }
+          ]
+        },
+        "emp_4": {
+          "employeeId": "emp_4",
+          "transactions": [
+            {
+              "id": "txn_4_may",
+              "date": "2026-05-15",
+              "totalFunding": 42000,
+              "balanceEmployeeFunding": 2000,
+              "receivedAmount": 38000,
+              "balanceAmount": 4000,
+              "notes": "System overhaul budget - Laxmidevipeta",
+              "proprietorApproved": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "salaries": [
+    {
+      "id": "2026-06",
+      "monthName": "June 2026",
+      "salaries": {
+        "emp_1": {
+          "employeeId": "emp_1",
+          "amount": 35000,
+          "incentive": 0,
+          "status": "Credited",
+          "employeeConfirmation": "Yes",
+          "proprietorApproved": true,
+          "notes": "Credited on 5th June via EFT",
+          "lastUpdated": "2026-06-05"
+        },
+        "emp_2": {
+          "employeeId": "emp_2",
+          "amount": 38000,
+          "incentive": 0,
+          "status": "Credited",
+          "employeeConfirmation": null,
+          "proprietorApproved": true,
+          "notes": "Credited on 5th June via EFT",
+          "lastUpdated": "2026-06-05"
+        },
+        "emp_3": {
+          "employeeId": "emp_3",
+          "amount": 32000,
+          "incentive": 0,
+          "status": "Pending",
+          "employeeConfirmation": null,
+          "proprietorApproved": false,
+          "notes": "Awaiting bank clearance",
+          "lastUpdated": "2026-06-09"
+        },
+        "emp_4": {
+          "employeeId": "emp_4",
+          "amount": 36000,
+          "incentive": 0,
+          "status": "Credited",
+          "employeeConfirmation": "No",
+          "proprietorApproved": true,
+          "notes": "Discrepancy reported on bonus calculation",
+          "lastUpdated": "2026-06-06"
+        },
+        "emp_5": {
+          "employeeId": "emp_5",
+          "amount": 40000,
+          "incentive": 0,
+          "status": "Pending",
+          "employeeConfirmation": null,
+          "proprietorApproved": false,
+          "lastUpdated": "2026-06-09"
+        },
+        "emp_6": {
+          "employeeId": "emp_6",
+          "amount": 30000,
+          "status": "Pending",
+          "employeeConfirmation": null,
+          "proprietorApproved": false,
+          "lastUpdated": "2026-06-09"
+        },
+        "emp_7": {
+          "employeeId": "emp_7",
+          "amount": 42000,
+          "status": "Pending",
+          "employeeConfirmation": null,
+          "proprietorApproved": false,
+          "lastUpdated": "2026-06-09"
+        }
+      }
+    },
+    {
+      "id": "2026-05",
+      "monthName": "May 2026",
+      "salaries": {
+        "emp_1": {
+          "employeeId": "emp_1",
+          "amount": 35000,
+          "incentive": 0,
+          "status": "Credited",
+          "employeeConfirmation": "Yes",
+          "proprietorApproved": true,
+          "notes": "EFT payment completed",
+          "lastUpdated": "2026-05-05"
+        },
+        "emp_2": {
+          "employeeId": "emp_2",
+          "amount": 38000,
+          "incentive": 0,
+          "status": "Credited",
+          "employeeConfirmation": "Yes",
+          "proprietorApproved": true,
+          "notes": "EFT payment completed",
+          "lastUpdated": "2026-05-05"
+        },
+        "emp_3": {
+          "employeeId": "emp_3",
+          "amount": 32000,
+          "incentive": 0,
+          "status": "Credited",
+          "employeeConfirmation": "Yes",
+          "proprietorApproved": true,
+          "notes": "EFT payment completed",
+          "lastUpdated": "2026-05-05"
+        },
+        "emp_4": {
+          "employeeId": "emp_4",
+          "amount": 36000,
+          "incentive": 0,
+          "status": "Credited",
+          "employeeConfirmation": "Yes",
+          "proprietorApproved": true,
+          "notes": "EFT payment completed",
+          "lastUpdated": "2026-05-05"
+        },
+        "emp_5": {
+          "employeeId": "emp_5",
+          "amount": 40000,
+          "incentive": 0,
+          "status": "Credited",
+          "employeeConfirmation": "Yes",
+          "proprietorApproved": true,
+          "notes": "EFT payment completed",
+          "lastUpdated": "2026-05-05"
+        },
+        "emp_6": {
+          "employeeId": "emp_6",
+          "amount": 30000,
+          "incentive": 0,
+          "status": "Credited",
+          "employeeConfirmation": "Yes",
+          "proprietorApproved": true,
+          "notes": "EFT payment completed",
+          "lastUpdated": "2026-05-05"
+        },
+        "emp_7": {
+          "employeeId": "emp_7",
+          "amount": 42000,
+          "incentive": 0,
+          "status": "Credited",
+          "employeeConfirmation": "Yes",
+          "proprietorApproved": true,
+          "notes": "EFT payment completed",
+          "lastUpdated": "2026-05-05"
+        }
+      }
+    }
+  ]
+}

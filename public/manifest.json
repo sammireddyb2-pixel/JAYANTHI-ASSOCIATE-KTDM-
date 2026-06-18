@@ -1,0 +1,24 @@
+{
+  "short_name": "Jayanthi",
+  "name": "Jayanthi Associates KTDM",
+  "description": "Activity, funding, and salary tracking application with security roles for JAYANTHI ASSOCIATE KTDM.",
+  "icons": [
+    {
+      "src": "/app-icon.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/app-icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "display": "standalone",
+  "orientation": "portrait"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Jayanthi Associate KTDM",
+  "description": "Activity, funding, and salary tracking application with security roles for JAYANTHI ASSOCIATE KTDM.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
