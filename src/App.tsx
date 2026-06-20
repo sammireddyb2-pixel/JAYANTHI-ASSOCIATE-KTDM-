@@ -634,7 +634,7 @@ export default function App() {
                       <div className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
                       <span className="text-slate-400">Welcome, <strong>{currentUser.name}</strong></span>
                     </div>
-                    <span className="text-slate-500 font-mono font-bold">PIN: {currentUser.pin}</span>
+                    <span className="text-slate-500 font-mono font-bold">PIN: ••••</span>
                   </div>
 
                 </div>
@@ -876,7 +876,7 @@ export default function App() {
                     <div className="bg-slate-900 border border-slate-800 rounded-2xl divide-y divide-slate-850 text-xs">
                       <div className="p-3 flex justify-between">
                         <span className="text-slate-400 font-bold">Security PIN</span>
-                        <strong className="text-slate-205 font-mono font-bold">{currentUser.pin}</strong>
+                        <strong className="text-slate-205 font-mono font-bold">••••</strong>
                       </div>
                       <div className="p-3 flex justify-between">
                         <span className="text-slate-400">Linked Phone</span>

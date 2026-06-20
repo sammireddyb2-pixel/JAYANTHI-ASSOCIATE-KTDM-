@@ -386,11 +386,13 @@ function normalizePeopleData(people: any[]): any[] {
   let result = people.map((p: any) => {
     if (p && p.id && officialMap.has(p.id)) {
       const official = officialMap.get(p.id)!;
-      // Force update name, phone, designation, photoUrl to matching official roster to prevent old data overrides
-      if (p.name !== official.name) { p.name = official.name; changed = true; }
-      if (p.phone !== official.phone) { p.phone = official.phone; changed = true; }
-      if (p.photoUrl !== official.photoUrl) { p.photoUrl = official.photoUrl; changed = true; }
-      if (p.designation !== official.designation) { p.designation = official.designation; changed = true; }
+      // Allow user edits but fill missing essential properties if blank
+      p.name = p.name || official.name;
+      p.role = p.role || official.role;
+      p.phone = p.phone || official.phone;
+      p.designation = p.designation || official.designation;
+      p.pin = p.pin || official.pin;
+      p.photoUrl = p.photoUrl || official.photoUrl;
     }
     return p;
   });
@@ -404,7 +406,7 @@ function normalizePeopleData(people: any[]): any[] {
   });
 
   if (changed) {
-    console.log("Database Normalizer: Active staff names, roles, photos, and phone numbers successfully forced to INITIAL_PEOPLE master roster!");
+    console.log("Database Normalizer: Active master roster seeded with missing elements.");
   }
   return result;
 }
@@ -705,113 +707,16 @@ app.post("/api/save", async (req, res) => {
       return res.status(400).json({ status: "error", message: "Missing required collections metadata" });
     }
 
-    // --- SECURE DEEP MERGE STRATEGY TO PREVENT CONCURRENT OVERWRITES AND DATA LOSS ---
+    // Assign directly so that all deletions, edits, additions, and updates are perfectly preserved
+    memoryState.people = normalizePeopleData(people);
+    memoryState.funding = funding;
+    memoryState.salaries = salaries;
 
-    // 1. Merge Personnel list
-    if (Array.isArray(people)) {
-      people.forEach((pClient: any) => {
-        const pIdx = memoryState.people.findIndex((p: any) => p.id === pClient.id);
-        if (pIdx !== -1) {
-          memoryState.people[pIdx] = {
-            ...memoryState.people[pIdx],
-            ...pClient,
-          };
-        } else {
-          memoryState.people.push(pClient);
-        }
-      });
-    }
-
-    // 2. Merge Funding ledger list (Month wise -> Employee wise -> Transaction wise)
-    if (Array.isArray(funding)) {
-      funding.forEach((mClient: any) => {
-        let mServer = memoryState.funding.find((m: any) => m.id === mClient.id);
-        if (!mServer) {
-          memoryState.funding.push(mClient);
-        } else {
-          if (mClient.employeeFundings) {
-            Object.keys(mClient.employeeFundings).forEach((empId: string) => {
-              const empClient = mClient.employeeFundings[empId];
-              const empServer = mServer!.employeeFundings[empId];
-              if (!empServer) {
-                mServer!.employeeFundings[empId] = empClient;
-              } else if (empClient && Array.isArray(empClient.transactions)) {
-                // Merge transactions with strict conflict resolution rules
-                empClient.transactions.forEach((txClient: any) => {
-                  const txIdx = empServer.transactions.findIndex((tx: any) => tx.id === txClient.id);
-                  if (txIdx === -1) {
-                    empServer.transactions.push(txClient);
-                  } else {
-                    const txServer = empServer.transactions[txIdx];
-                    // Keep approvals, confirmations, and correct balances
-                    const proprietorApproved = txServer.proprietorApproved || txClient.proprietorApproved;
-                    const employeeConfirmation = txClient.employeeConfirmation || txServer.employeeConfirmation;
-                    const totalFunding = txClient.totalFunding !== txServer.totalFunding ? txClient.totalFunding : txServer.totalFunding;
-                    const receivedAmount = txClient.receivedAmount !== txServer.receivedAmount ? txClient.receivedAmount : txServer.receivedAmount;
-                    const balanceEmployeeFunding = txClient.balanceEmployeeFunding !== txServer.balanceEmployeeFunding ? txClient.balanceEmployeeFunding : txServer.balanceEmployeeFunding;
-                    const balanceAmount = Math.max(0, totalFunding - receivedAmount);
-
-                    empServer.transactions[txIdx] = {
-                      ...txServer,
-                      ...txClient,
-                      proprietorApproved,
-                      employeeConfirmation,
-                      totalFunding,
-                      receivedAmount,
-                      balanceEmployeeFunding,
-                      balanceAmount
-                    };
-                  }
-                });
-              }
-            });
-          }
-        }
-      });
-      // Maintain latest months at the top
+    // Maintain latest sort order
+    if (Array.isArray(memoryState.funding)) {
       memoryState.funding.sort((a, b) => b.id.localeCompare(a.id));
     }
-
-    // 3. Merge Salaries ledger list (Month wise -> Employee wise SalaryRecord)
-    if (Array.isArray(salaries)) {
-      salaries.forEach((mClient: any) => {
-        let mServer = memoryState.salaries.find((m: any) => m.id === mClient.id);
-        if (!mServer) {
-          memoryState.salaries.push(mClient);
-        } else {
-          if (mClient.salaries) {
-            Object.keys(mClient.salaries).forEach((empId: string) => {
-              const sClient = mClient.salaries[empId];
-              const sServer = mServer!.salaries[empId];
-              if (!sServer) {
-                mServer!.salaries[empId] = sClient;
-              } else {
-                // Safe merge rule: do not let stale states overwrite active credits, approvals or confirmations
-                const status = (sServer.status === 'Credited' || sClient.status === 'Credited') ? 'Credited' : 'Pending';
-                const proprietorApproved = sServer.proprietorApproved || sClient.proprietorApproved;
-                const employeeConfirmation = sClient.employeeConfirmation || sServer.employeeConfirmation;
-                
-                // If proprietor approved, keep server amounts to prevent accidental edits by stale roles
-                const amount = sServer.proprietorApproved ? sServer.amount : (sClient.amount ?? sServer.amount);
-                const incentive = sServer.proprietorApproved ? sServer.incentive : (sClient.incentive ?? sServer.incentive);
-                
-                mServer!.salaries[empId] = {
-                  ...sServer,
-                  ...sClient,
-                  status,
-                  proprietorApproved,
-                  employeeConfirmation,
-                  amount,
-                  incentive,
-                  notes: sClient.notes || sServer.notes,
-                  lastUpdated: (!sClient.lastUpdated || (sServer.lastUpdated > sClient.lastUpdated)) ? sServer.lastUpdated : sClient.lastUpdated
-                };
-              }
-            });
-          }
-        }
-      });
-      // Maintain latest salaries at the top
+    if (Array.isArray(memoryState.salaries)) {
       memoryState.salaries.sort((a, b) => b.id.localeCompare(a.id));
     }
 
@@ -830,7 +735,7 @@ app.post("/api/save", async (req, res) => {
 
   } catch (error: any) {
     console.error("Failed to sync client write stream to memory map:", error);
-    res.status(500).json({ status: "error", message: error.message || "Failed to persist database" });
+    res.status(500).json({ status: "error", message: error?.message || "Failed to persist database" });
   }
 });
 

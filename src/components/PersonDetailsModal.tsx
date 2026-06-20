@@ -231,7 +231,7 @@ export function PersonDetailsModal({ person, onClose, currentUser, onUpdatePerso
                   <div>
                     <label className="block text-[9px] font-mono uppercase tracking-wider text-slate-500 mb-1">Entry PIN (4-Digits)</label>
                     <input
-                      type="text"
+                      type="password"
                       maxLength={4}
                       value={pin}
                       disabled={person.role === 'proprietor' && currentUser.role !== 'proprietor'}
@@ -316,7 +316,7 @@ export function PersonDetailsModal({ person, onClose, currentUser, onUpdatePerso
                       <Key className="w-4 h-4 text-amber-400 shrink-0" />
                       <div className="text-xs">
                         <p className="text-amber-500/80 font-mono text-[9px] uppercase tracking-wider">Security Entry PIN</p>
-                        <p className="font-mono font-bold text-slate-200 mt-0.5 tracking-wider">{person.pin}</p>
+                        <p className="font-mono font-bold text-slate-200 mt-0.5 tracking-wider">••••</p>
                       </div>
                     </div>
                   )}
