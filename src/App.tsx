@@ -146,8 +146,11 @@ export default function App() {
 
   // Load state on bootstrap
   useEffect(() => {
-    const loadedPeopleRaw = loadLocalData<Person[]>('people', INITIAL_PEOPLE);
-    const loadedPeople = loadedPeopleRaw.map(p => {
+    let loadedPeopleRaw = loadLocalData<Person[]>('people', INITIAL_PEOPLE);
+    if (!Array.isArray(loadedPeopleRaw)) {
+      loadedPeopleRaw = INITIAL_PEOPLE;
+    }
+    const loadedPeople = loadedPeopleRaw.filter(p => p && p.id).map(p => {
       const official = INITIAL_PEOPLE.find(x => x.id === p.id);
       if (official) {
         p.name = official.name;
@@ -158,8 +161,12 @@ export default function App() {
       return p;
     });
 
-    const loadedFunding = loadLocalData<MonthlyFunding[]>('funding', INITIAL_FUNDING);
-    const loadedSalaries = loadLocalData<MonthlySalary[]>('salaries', INITIAL_SALARIES);
+    let loadedFunding = loadLocalData<MonthlyFunding[]>('funding', INITIAL_FUNDING);
+    if (!Array.isArray(loadedFunding)) loadedFunding = INITIAL_FUNDING;
+
+    let loadedSalaries = loadLocalData<MonthlySalary[]>('salaries', INITIAL_SALARIES);
+    if (!Array.isArray(loadedSalaries)) loadedSalaries = INITIAL_SALARIES;
+
     const loadedUser = loadLocalData<Person | null>('logged_user', null);
 
     // Load Chat history or seed defaults
@@ -168,9 +175,9 @@ export default function App() {
     setPeople(loadedPeople);
     setFunding(loadedFunding);
     setSalaries(loadedSalaries);
-    setChats(loadedChats);
+    setChats(loadedChats || {});
 
-    if (loadedUser) {
+    if (loadedUser && loadedUser.id) {
       const match = loadedPeople.find(p => p.id === loadedUser.id);
       if (match) {
         setCurrentUser(match);
@@ -182,12 +189,12 @@ export default function App() {
       .then(res => res.json())
       .then(res => {
         if (res.status === 'success' && res.data) {
-          const sPeople = res.data.people || [];
-          const sFunding = res.data.funding || [];
-          const sSalaries = res.data.salaries || [];
+          const sPeople = Array.isArray(res.data.people) ? res.data.people : [];
+          const sFunding = Array.isArray(res.data.funding) ? res.data.funding : [];
+          const sSalaries = Array.isArray(res.data.salaries) ? res.data.salaries : [];
 
           if (sPeople.length > 0) {
-            let mergedPeople = sPeople.map((p: any) => {
+            let mergedPeople = sPeople.filter((p: any) => p && p.id).map((p: any) => {
               const official = INITIAL_PEOPLE.find(x => x.id === p.id);
               if (official) {
                 p.name = official.name;

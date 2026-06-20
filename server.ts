@@ -15,12 +15,15 @@ let dbInstance: any = null;
 function getDb() {
   if (!dbInstance) {
     try {
+      let app;
       if ((admin as any).apps?.length === 0) {
-        admin.initializeApp({
+        app = admin.initializeApp({
           projectId: "teak-loop-1d2jw"
         });
+      } else {
+        app = (admin as any).apps[0];
       }
-      dbInstance = getFirestore("ai-studio-1082d5f0-e0bd-47ee-b90b-c92fb997b064");
+      dbInstance = getFirestore(app, "ai-studio-1082d5f0-e0bd-47ee-b90b-c92fb997b064");
     } catch (error) {
       console.error("Failed to initialize Firebase Admin or Firestore securely:", error);
       // Fallback mock to guarantee startup and functional local storage even if Firestore is entirely offline
