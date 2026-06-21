@@ -153,12 +153,15 @@ export default function App() {
     const loadedPeople = loadedPeopleRaw.filter(p => p && p.id).map(p => {
       const official = INITIAL_PEOPLE.find(x => x.id === p.id);
       if (official) {
-        p.name = official.name;
-        p.phone = official.phone;
-        p.photoUrl = official.photoUrl;
-        p.designation = official.designation;
+        return {
+          ...p,
+          name: official.name,
+          phone: official.phone,
+          photoUrl: official.photoUrl,
+          designation: official.designation
+        };
       }
-      return p;
+      return { ...p };
     });
 
     let loadedFunding = loadLocalData<MonthlyFunding[]>('funding', INITIAL_FUNDING);
@@ -193,16 +196,22 @@ export default function App() {
           const sFunding = Array.isArray(res.data.funding) ? res.data.funding : [];
           const sSalaries = Array.isArray(res.data.salaries) ? res.data.salaries : [];
 
-          if (sPeople.length > 0) {
+          // Merge server data if any collections have data
+          if (sPeople.length > 0 || sFunding.length > 0 || sSalaries.length > 0) {
             let mergedPeople = sPeople.filter((p: any) => p && p.id).map((p: any) => {
               const official = INITIAL_PEOPLE.find(x => x.id === p.id);
               if (official) {
-                p.name = official.name;
-                p.phone = official.phone;
-                p.photoUrl = official.photoUrl;
-                p.designation = official.designation;
+                return {
+                  ...p,
+                  name: official.name,
+                  phone: official.phone,
+                  photoUrl: official.photoUrl,
+                  designation: official.designation,
+                  role: official.role,
+                  pin: official.pin
+                };
               }
-              return p;
+              return { ...p };
             });
             let listChanged = false;
 
@@ -219,37 +228,53 @@ export default function App() {
             INITIAL_PEOPLE.forEach(p => {
               const matchIdx = mergedPeople.findIndex(x => x.id === p.id);
               if (matchIdx === -1) {
-                mergedPeople.push(p);
+                mergedPeople.push({ ...p });
                 listChanged = true;
               }
             });
 
-            let mergedSalaries = [...sSalaries];
+            // Map and merge salaries without mutating any objects direct reference
+            let mergedSalaries = sSalaries.length > 0 ? sSalaries.map(ms => JSON.parse(JSON.stringify(ms))) : JSON.parse(JSON.stringify(INITIAL_SALARIES));
             INITIAL_SALARIES.forEach(initialMonth => {
-              const matchMonth = mergedSalaries.find(ms => ms.id === initialMonth.id);
-              if (matchMonth) {
+              const matchMonthIdx = mergedSalaries.findIndex((ms: any) => ms.id === initialMonth.id);
+              if (matchMonthIdx !== -1) {
+                const matchMonth = mergedSalaries[matchMonthIdx];
+                let monthSalaries = { ...matchMonth.salaries };
+                let monthChanged = false;
                 Object.keys(initialMonth.salaries).forEach(empId => {
-                  if (!matchMonth.salaries[empId]) {
-                    matchMonth.salaries[empId] = initialMonth.salaries[empId];
+                  if (!monthSalaries[empId]) {
+                    monthSalaries[empId] = { ...(initialMonth.salaries as any)[empId] };
+                    monthChanged = true;
                     listChanged = true;
                   }
                 });
+                if (monthChanged) {
+                  mergedSalaries[matchMonthIdx] = {
+                    ...matchMonth,
+                    salaries: monthSalaries
+                  };
+                }
+              } else {
+                mergedSalaries.push(JSON.parse(JSON.stringify(initialMonth)));
+                listChanged = true;
               }
             });
+
+            const mergedFundingResult = sFunding.length > 0 ? sFunding : INITIAL_FUNDING;
 
             if (listChanged) {
               fetch('/api/save', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ people: mergedPeople, funding: sFunding, salaries: mergedSalaries })
+                body: JSON.stringify({ people: mergedPeople, funding: mergedFundingResult, salaries: mergedSalaries })
               }).catch(() => {});
             }
 
             setPeople(mergedPeople);
             saveLocalData('people', mergedPeople);
 
-            setFunding(sFunding);
-            saveLocalData('funding', sFunding);
+            setFunding(mergedFundingResult);
+            saveLocalData('funding', mergedFundingResult);
 
             setSalaries(mergedSalaries);
             saveLocalData('salaries', mergedSalaries);
